@@ -30,7 +30,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/icastillejogomez/degiro-api.git"
+    "url": "https://github.com/MDBijman/degiro-api.git"
   },
   "devDependencies": {
     "@types/async": "^3.2.3",
@@ -46,7 +46,6 @@
     "nyc": "^15.1.0",
     "ts-node": "^8.10.2",
     "tslint": "^6.1.2",
-    "tslint-config-airbnb": "^5.11.2",
     "typedoc": "^0.17.7",
     "typescript": "^3.8.3"
   },
