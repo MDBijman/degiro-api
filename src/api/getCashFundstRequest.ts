@@ -7,7 +7,7 @@ import { DEGIRO_API_PATHS } from '../enums/DeGiroEnums'
 const { GET_GENERIC_DATA_PATH } = DEGIRO_API_PATHS
 
 // tslint:disable-next-line: max-line-length
-export function getCashFundstRequest(accountData: AccountDataType, accountConfig: AccountConfigType): Promise<CashFoundType[]> {
+export function getCashFundstRequest(intAccount: number, accountConfig: AccountConfigType): Promise<CashFoundType[]> {
   return new Promise((resolve, reject) => {
 
     let params = ''
@@ -31,7 +31,7 @@ export function getCashFundstRequest(accountData: AccountDataType, accountConfig
     }
 
     // Do the request to get a account config data
-    const uri = `${accountConfig.data.tradingUrl}${GET_GENERIC_DATA_PATH}${accountData.data.intAccount};jsessionid=${accountConfig.data.sessionId}?${params}`
+    const uri = `${accountConfig.data.tradingUrl}${GET_GENERIC_DATA_PATH}${intAccount};jsessionid=${accountConfig.data.sessionId}?${params}`
     debug(`Making request to ${uri}`)
     fetch(uri, requestOptions)
       .then(res => res.json())

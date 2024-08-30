@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getConfigDictionaryRequest = void 0;
 // Import debug console log
 var utils_1 = require("../utils");
-function getConfigDictionaryRequest(accountData, accountConfig) {
+function getConfigDictionaryRequest(intAccount, accountConfig) {
     return new Promise(function (resolve, reject) {
         var requestOptions = {
             headers: {
@@ -13,7 +13,7 @@ function getConfigDictionaryRequest(accountData, accountConfig) {
             referer: 'https://trader.degiro.nl/trader/',
         };
         // Do the request to get a account config data
-        var uri = accountConfig.data.dictionaryUrl + "?intAccount=" + accountData.data.intAccount + "&sessionId=" + accountConfig.data.sessionId;
+        var uri = accountConfig.data.dictionaryUrl + "?intAccount=" + intAccount + "&sessionId=" + accountConfig.data.sessionId;
         utils_1.debug("Making request to " + uri);
         utils_1.fetch(uri, requestOptions)
             .then(function (res) { return res.json(); })

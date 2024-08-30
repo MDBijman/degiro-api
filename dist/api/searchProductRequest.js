@@ -20,13 +20,13 @@ var createURLQuery = function (options) {
         res += "&offset=" + encodeURIComponent(offset);
     return res;
 };
-function searchProductRequest(options, accountData, accountConfig) {
+function searchProductRequest(options, intAccount, accountConfig) {
     return new Promise(function (resolve, reject) {
         // Preparae de request
         var params = createURLQuery(options);
         // Do de request
-        utils_1.debug("Making a search request to url: " + accountConfig.data.productSearchUrl + "v5/products/lookup?intAccount=" + accountData.data.intAccount + "&sessionId=" + accountData.data.id + "&" + params + "}");
-        utils_1.fetch(accountConfig.data.productSearchUrl + "v5/products/lookup?intAccount=" + accountData.data.intAccount + "&sessionId=" + accountConfig.data.sessionId + "&" + params)
+        utils_1.debug("Making a search request to url: " + accountConfig.data.productSearchUrl + "v5/products/lookup?intAccount=" + intAccount + "&sessionId=" + accountConfig.data.sessionId + "&" + params + "}");
+        utils_1.fetch(accountConfig.data.productSearchUrl + "v5/products/lookup?intAccount=" + intAccount + "&sessionId=" + accountConfig.data.sessionId + "&" + params)
             .then(function (res) { return res.json(); })
             .then(function (_a) {
             var products = _a.products;

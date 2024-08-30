@@ -9,7 +9,7 @@ const { CREATE_ORDER_PATH } = DEGIRO_API_PATHS
 import { debug, fetch } from '../utils'
 
 
-export function createOrderRequest(order: OrderType, accountData: AccountDataType, accountConfig: AccountConfigType): Promise<CreateOrderResultType> {
+export function createOrderRequest(order: OrderType, intAccount: number, accountConfig: AccountConfigType): Promise<CreateOrderResultType> {
   return new Promise((resolve, reject) => {
 
     const requestOptions: {
@@ -30,7 +30,7 @@ export function createOrderRequest(order: OrderType, accountData: AccountDataTyp
       referer: 'https://trader.degiro.nl/trader/',
     }
 
-    const uri = `${accountConfig.data.tradingUrl}${CREATE_ORDER_PATH};jsessionid=${accountConfig.data.sessionId}?intAccount=${accountData.data.intAccount}&sessionId=${accountConfig.data.sessionId}`
+    const uri = `${accountConfig.data.tradingUrl}${CREATE_ORDER_PATH};jsessionid=${accountConfig.data.sessionId}?intAccount=${intAccount}&sessionId=${accountConfig.data.sessionId}`
     debug(uri, requestOptions)
     fetch(uri, requestOptions)
       .then(res => res.json())

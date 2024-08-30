@@ -7,7 +7,7 @@ var utils_1 = require("../utils");
 var enums_1 = require("../enums");
 var STOCKS_SEARCH_PATH = enums_1.DEGIRO_API_PATHS.STOCKS_SEARCH_PATH;
 // tslint:disable-next-line: max-line-length
-function getPopularStocksRequest(accountData, accountConfig, config) {
+function getPopularStocksRequest(intAccount, accountConfig, config) {
     return new Promise(function (resolve, reject) {
         // Create fetch request options
         var requestOptions = {
@@ -24,7 +24,7 @@ function getPopularStocksRequest(accountData, accountConfig, config) {
         params += "requireTotal=" + requireTotal + "&";
         params += "offset=" + offset + "&";
         params += "limit=" + limit + "&";
-        params += "intAccount=" + accountData.data.intAccount + "&";
+        params += "intAccount=" + intAccount + "&";
         params += "sessionId=" + accountConfig.data.sessionId;
         // Do the request to get a account config data
         var url = "" + accountConfig.data.productSearchUrl + STOCKS_SEARCH_PATH + "?" + params;

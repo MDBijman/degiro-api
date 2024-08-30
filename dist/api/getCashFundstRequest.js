@@ -6,7 +6,7 @@ var utils_1 = require("../utils");
 var DeGiroEnums_1 = require("../enums/DeGiroEnums");
 var GET_GENERIC_DATA_PATH = DeGiroEnums_1.DEGIRO_API_PATHS.GET_GENERIC_DATA_PATH;
 // tslint:disable-next-line: max-line-length
-function getCashFundstRequest(accountData, accountConfig) {
+function getCashFundstRequest(intAccount, accountConfig) {
     return new Promise(function (resolve, reject) {
         var params = '';
         params += 'cashFunds=0&';
@@ -19,7 +19,7 @@ function getCashFundstRequest(accountData, accountConfig) {
             referer: 'https://trader.degiro.nl/trader/',
         };
         // Do the request to get a account config data
-        var uri = "" + accountConfig.data.tradingUrl + GET_GENERIC_DATA_PATH + accountData.data.intAccount + ";jsessionid=" + accountConfig.data.sessionId + "?" + params;
+        var uri = "" + accountConfig.data.tradingUrl + GET_GENERIC_DATA_PATH + intAccount + ";jsessionid=" + accountConfig.data.sessionId + "?" + params;
         utils_1.debug("Making request to " + uri);
         utils_1.fetch(uri, requestOptions)
             .then(function (res) { return res.json(); })

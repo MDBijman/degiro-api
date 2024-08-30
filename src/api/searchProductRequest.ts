@@ -20,14 +20,14 @@ const createURLQuery = (options: SearchProductOptionsType): string => {
   return res
 }
 
-export function searchProductRequest(options: SearchProductOptionsType, accountData: AccountDataType, accountConfig: AccountConfigType): Promise<SearchProductResultType[]> {
+export function searchProductRequest(options: SearchProductOptionsType, intAccount: number, accountConfig: AccountConfigType): Promise<SearchProductResultType[]> {
   return new Promise((resolve, reject) => {
     // Preparae de request
     const params = createURLQuery(options)
 
     // Do de request
-    debug(`Making a search request to url: ${accountConfig.data.productSearchUrl}v5/products/lookup?intAccount=${accountData.data.intAccount}&sessionId=${accountData.data.id}&${params}}`)
-    fetch(`${accountConfig.data.productSearchUrl}v5/products/lookup?intAccount=${accountData.data.intAccount}&sessionId=${accountConfig.data.sessionId}&${params}`)
+    debug(`Making a search request to url: ${accountConfig.data.productSearchUrl}v5/products/lookup?intAccount=${intAccount}&sessionId=${accountConfig.data.sessionId}&${params}}`)
+    fetch(`${accountConfig.data.productSearchUrl}v5/products/lookup?intAccount=${intAccount}&sessionId=${accountConfig.data.sessionId}&${params}`)
       .then(res => res.json())
       .then(({ products }) => resolve(products || []))
       .catch(reject)

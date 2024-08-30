@@ -1,26 +1,32 @@
 import { DeGiroClassInterface } from './interfaces';
-import { DeGiroSettupType, AccountConfigType, AccountDataType, CashFoundType, SearchProductResultType, GetPorfolioConfigType, SearchProductOptionsType, OrderType, CreateOrderResultType, IsLoginOptionsType, GetOrdersConfigType, GetOrdersResultType, GetAccountStateOptionsType, AccountReportsType, AccountInfoType, GetHistoricalOrdersOptionsType, HistoricalOrdersType, FavouriteProductType, StockType, GetNewsOptionsType, NewsType, WebUserSettingType, ConfigDictionaryType, i18nMessagesType, WebSettingsType, GetPopularStocksConfigType, GetTransactionsOptionsType, TransactionType } from './types';
+import { AccountConfigType, AccountDataType, CashFoundType, SearchProductResultType, GetPorfolioConfigType, SearchProductOptionsType, OrderType, CreateOrderResultType, GetOrdersConfigType, GetOrdersResultType, GetAccountStateOptionsType, AccountReportsType, AccountInfoType, GetHistoricalOrdersOptionsType, HistoricalOrdersType, FavouriteProductType, StockType, GetNewsOptionsType, NewsType, WebUserSettingType, ConfigDictionaryType, i18nMessagesType, WebSettingsType, GetPopularStocksConfigType, GetTransactionsOptionsType, TransactionType } from './types';
+export declare type DeGiroLoginType = {
+    username: string;
+    password: string;
+    oneTimePassword: string;
+};
+export declare class DeGiroLogin {
+    private readonly username;
+    private readonly password;
+    private readonly oneTimePassword;
+    constructor(params: DeGiroLoginType);
+    login(intAccount: number): Promise<DeGiroSessionType>;
+}
+export declare type DeGiroSessionType = {
+    jsessionId: string;
+    intAccount: number;
+};
 /**
  * @class DeGiro
  * @description Main class of DeGiro Unofficial API.
  */
 export declare class DeGiro implements DeGiroClassInterface {
-    private readonly username;
-    private readonly pwd;
-    private readonly oneTimePassword;
+    private readonly intAccount;
     private jsessionId;
     private accountConfig;
-    private accountData;
-    constructor(params?: DeGiroSettupType);
-    static create(params: DeGiroSettupType): DeGiro;
-    login(): Promise<AccountDataType>;
-    logout(): Promise<void>;
-    isLogin(options?: IsLoginOptionsType): boolean | Promise<boolean>;
-    private hasSessionId;
-    private loginWithJSESSIONID;
-    getJSESSIONID: () => string | undefined;
-    getAccountConfig(sessionId?: string): Promise<AccountConfigType>;
-    getAccountData(): Promise<AccountDataType>;
+    constructor(params: DeGiroSessionType);
+    getAccountConfig(): Promise<AccountConfigType>;
+    getAccountData(accountConfig: AccountConfigType): Promise<AccountDataType>;
     getAccountState(options: GetAccountStateOptionsType): Promise<any[]>;
     getAccountReports(): Promise<AccountReportsType>;
     getAccountInfo(): Promise<AccountInfoType>;

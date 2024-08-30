@@ -4,14 +4,14 @@ exports.getTransactionsRequest = void 0;
 var enums_1 = require("../enums");
 var utils_1 = require("../utils");
 var GET_TRANSACTIONS_PATH = enums_1.DEGIRO_API_PATHS.GET_TRANSACTIONS_PATH;
-function getTransactionsRequest(accountData, accountConfig, config) {
+function getTransactionsRequest(intAccount, accountConfig, config) {
     return new Promise(function (resolve, reject) {
         // Create params to get orders by types
         var params = '';
         params += "fromDate=" + encodeURIComponent(config.fromDate) + "&";
         params += "toDate=" + encodeURIComponent(config.toDate) + "&";
         params += "groupTransactionsByOrder";
-        params += "intAccount=" + accountData.data.intAccount + "&";
+        params += "intAccount=" + intAccount + "&";
         params += "sessionId=" + accountConfig.data.sessionId;
         var requestOptions = {
             headers: {

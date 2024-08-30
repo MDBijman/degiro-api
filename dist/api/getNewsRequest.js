@@ -42,7 +42,7 @@ var utils_1 = require("../utils");
 // Import paths
 var enums_1 = require("../enums");
 var GET_LATESTS_NEWS_PATH = enums_1.DEGIRO_API_PATHS.GET_LATESTS_NEWS_PATH, GET_TOP_NEWS_PATH = enums_1.DEGIRO_API_PATHS.GET_TOP_NEWS_PATH;
-function getNewsRequest(options, accountData, accountConfig) {
+function getNewsRequest(options, intAccount, accountConfig) {
     var _this = this;
     return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
         var latest, top, _a, latestOffset, _b, latestLimit, _c, languages, params, requestOptions, latestNewsURI, topNewsURI, result, latestFetch, data, latestFetch, data, error_1;
@@ -54,7 +54,7 @@ function getNewsRequest(options, accountData, accountConfig) {
                     params += "offset=" + latestOffset + "&";
                     params += "limit=" + latestLimit + "&";
                     params += "languages=" + languages + "&";
-                    params += "intAccount=" + accountData.data.intAccount + "&";
+                    params += "intAccount=" + intAccount + "&";
                     params += "sessionId=" + accountConfig.data.sessionId;
                     requestOptions = {
                         headers: {

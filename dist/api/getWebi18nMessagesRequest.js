@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getWebi18nMessagesRequest = void 0;
 // Import debug console log
 var utils_1 = require("../utils");
-function getWebi18nMessagesRequest(lang, accountData, accountConfig) {
+function getWebi18nMessagesRequest(lang, accountConfig) {
     return new Promise(function (resolve, reject) {
         var requestOptions = {
             headers: {

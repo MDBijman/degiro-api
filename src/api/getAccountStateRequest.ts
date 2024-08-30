@@ -7,14 +7,14 @@ import { DEGIRO_API_PATHS } from '../enums/DeGiroEnums'
 const { GET_ACCOUNT_STATE_PATH } = DEGIRO_API_PATHS
 
 // tslint:disable-next-line: max-line-length
-export function getAccountStateRequest(accountData: AccountDataType, accountConfig: AccountConfigType, config: GetAccountStateOptionsType): Promise<any[]> {
+export function getAccountStateRequest(intAccount: number, accountConfig: AccountConfigType, config: GetAccountStateOptionsType): Promise<any[]> {
   return new Promise((resolve, reject) => {
     // Create params to get orders by types
     const { from, to } = config
     let params = ''
     params += `fromDate=${encodeURIComponent(from)}&`
     params += `toDate=${encodeURIComponent(to)}&`
-    params += `intAccount=${accountData.data.intAccount}&`
+    params += `intAccount=${intAccount}&`
     params += `sessionId=${accountConfig.data.sessionId}`
 
     const requestOptions: {

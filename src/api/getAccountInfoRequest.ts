@@ -8,7 +8,7 @@ import { debug, fetch } from '../utils'
 import { DEGIRO_API_PATHS } from '../enums'
 const { GET_ACCOUNT_INFO_PATH } = DEGIRO_API_PATHS
 
-export function getAccountInfoRequest(accountData: AccountDataType, accountConfig: AccountConfigType): Promise<AccountInfoType> {
+export function getAccountInfoRequest(intAccount: number, accountConfig: AccountConfigType): Promise<AccountInfoType> {
   return new Promise((resolve, reject) => {
 
     const requestOptions: {
@@ -28,7 +28,7 @@ export function getAccountInfoRequest(accountData: AccountDataType, accountConfi
     }
 
     // Do the request to get a account config data
-    const uri = `${accountConfig.data.tradingUrl}${GET_ACCOUNT_INFO_PATH}${accountData.data.intAccount};jsessionid=${accountConfig.data.sessionId}`
+    const uri = `${accountConfig.data.tradingUrl}${GET_ACCOUNT_INFO_PATH}${intAccount};jsessionid=${accountConfig.data.sessionId}`
     debug(`Making request to ${uri}`)
     fetch(uri, requestOptions)
       .then(res => res.json())

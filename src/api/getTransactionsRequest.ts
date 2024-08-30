@@ -3,14 +3,14 @@ import { AccountConfigType, AccountDataType, GetTransactionsOptionsType, Transac
 import { debug, fetch } from '../utils';
 const { GET_TRANSACTIONS_PATH } = DEGIRO_API_PATHS;
 
-export function getTransactionsRequest(accountData: AccountDataType, accountConfig: AccountConfigType, config: GetTransactionsOptionsType): Promise<TransactionType[]> {
+export function getTransactionsRequest(intAccount: number, accountConfig: AccountConfigType, config: GetTransactionsOptionsType): Promise<TransactionType[]> {
   return new Promise((resolve, reject) => {
     // Create params to get orders by types
     let params = ''
     params += `fromDate=${encodeURIComponent(config.fromDate)}&`
     params += `toDate=${encodeURIComponent(config.toDate)}&`
     params += `groupTransactionsByOrder`
-    params += `intAccount=${accountData.data.intAccount}&`
+    params += `intAccount=${intAccount}&`
     params += `sessionId=${accountConfig.data.sessionId}`
 
     const requestOptions: {

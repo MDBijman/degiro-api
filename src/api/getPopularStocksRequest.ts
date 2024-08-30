@@ -9,7 +9,7 @@ import { DEGIRO_API_PATHS } from '../enums'
 const { STOCKS_SEARCH_PATH } = DEGIRO_API_PATHS
 
 // tslint:disable-next-line: max-line-length
-export function getPopularStocksRequest(accountData: AccountDataType, accountConfig: AccountConfigType, config: GetPopularStocksConfigType): Promise<StockType[]> {
+export function getPopularStocksRequest(intAccount: number, accountConfig: AccountConfigType, config: GetPopularStocksConfigType): Promise<StockType[]> {
   return new Promise((resolve, reject) => {
 
     // Create fetch request options
@@ -36,7 +36,7 @@ export function getPopularStocksRequest(accountData: AccountDataType, accountCon
     params += `requireTotal=${requireTotal}&`
     params += `offset=${offset}&`
     params += `limit=${limit}&`
-    params += `intAccount=${accountData.data.intAccount}&`
+    params += `intAccount=${intAccount}&`
     params += `sessionId=${accountConfig.data.sessionId}`
 
     // Do the request to get a account config data

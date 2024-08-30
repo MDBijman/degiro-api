@@ -1,10 +1,10 @@
 // Import types
-import { AccountConfigType, AccountDataType, i18nMessagesType } from '../types'
+import { AccountConfigType, i18nMessagesType } from '../types'
 
 // Import debug console log
 import { debug, fetch } from '../utils'
 
-export function getWebi18nMessagesRequest(lang: string, accountData: AccountDataType, accountConfig: AccountConfigType): Promise<i18nMessagesType> {
+export function getWebi18nMessagesRequest(lang: string, accountConfig: AccountConfigType): Promise<i18nMessagesType> {
   return new Promise((resolve, reject) => {
 
     const requestOptions: {

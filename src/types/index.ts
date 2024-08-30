@@ -1,5 +1,4 @@
 import { CashFoundType } from './CashFoundType'
-import { DeGiroSettupType } from './DeGiroSettupType'
 import { PortfolioPositionType } from './PortfolioPositionType'
 import { LoginResponseType } from './LoginResponseType'
 import { LoginRequestParamsType } from './LoginRequestParamsType'
@@ -12,7 +11,6 @@ import { SearchProductResultType } from './SearchProductResultType'
 import { OrderType } from './OrderType'
 import { CreateOrderResultType } from './CreateOrderResultType'
 import { TransactionFeeType } from './TransactionFeeType'
-import { IsLoginOptionsType } from './IsLoginOptionsType'
 import { GetOrdersConfigType } from './GetOrdersConfigType'
 import { GetOrdersResultType } from './GetOrdersResultType'
 import { GetAccountStateOptionsType } from './GetAccountStateOptionsType'
@@ -49,7 +47,6 @@ import {
 
 export {
   CashFoundType,
-  DeGiroSettupType,
   PortfolioPositionType,
   LoginResponseType,
   LoginRequestParamsType,
@@ -62,7 +59,6 @@ export {
   OrderType,
   CreateOrderResultType,
   TransactionFeeType,
-  IsLoginOptionsType,
   GetOrdersConfigType,
   GetOrdersResultType,
   GetTransactionsOptionsType,

@@ -8,7 +8,7 @@ import { fetch } from '../utils'
 import { DEGIRO_API_PATHS } from '../enums'
 const { GET_LATESTS_NEWS_PATH, GET_TOP_NEWS_PATH } = DEGIRO_API_PATHS
 
-export function getNewsRequest(options: GetNewsOptionsType, accountData: AccountDataType, accountConfig: AccountConfigType): Promise<NewsType> {
+export function getNewsRequest(options: GetNewsOptionsType, intAccount: number, accountConfig: AccountConfigType): Promise<NewsType> {
   return new Promise(async (resolve, reject) => {
 
     // Generate params
@@ -17,7 +17,7 @@ export function getNewsRequest(options: GetNewsOptionsType, accountData: Account
     params += `offset=${latestOffset}&`
     params += `limit=${latestLimit}&`
     params += `languages=${languages}&`
-    params += `intAccount=${accountData.data.intAccount}&`
+    params += `intAccount=${intAccount}&`
     params += `sessionId=${accountConfig.data.sessionId}`
 
     // Generate Request options

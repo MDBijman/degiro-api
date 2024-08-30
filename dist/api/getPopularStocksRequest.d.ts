@@ -1,3 +1,3 @@
-import { AccountConfigType, AccountDataType, StockType, GetPopularStocksConfigType } from '../types';
-export declare function getPopularStocksRequest(accountData: AccountDataType, accountConfig: AccountConfigType, config: GetPopularStocksConfigType): Promise<StockType[]>;
+import { AccountConfigType, StockType, GetPopularStocksConfigType } from '../types';
+export declare function getPopularStocksRequest(intAccount: number, accountConfig: AccountConfigType, config: GetPopularStocksConfigType): Promise<StockType[]>;
 //# sourceMappingURL=getPopularStocksRequest.d.ts.map

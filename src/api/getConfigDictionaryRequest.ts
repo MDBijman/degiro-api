@@ -4,7 +4,7 @@ import { AccountConfigType, AccountDataType, ConfigDictionaryType } from '../typ
 // Import debug console log
 import { debug, fetch } from '../utils'
 
-export function getConfigDictionaryRequest(accountData: AccountDataType, accountConfig: AccountConfigType): Promise<ConfigDictionaryType> {
+export function getConfigDictionaryRequest(intAccount: number, accountConfig: AccountConfigType): Promise<ConfigDictionaryType> {
   return new Promise((resolve, reject) => {
 
     const requestOptions: {
@@ -24,7 +24,7 @@ export function getConfigDictionaryRequest(accountData: AccountDataType, account
     }
 
     // Do the request to get a account config data
-    const uri = `${accountConfig.data.dictionaryUrl}?intAccount=${accountData.data.intAccount}&sessionId=${accountConfig.data.sessionId}`
+    const uri = `${accountConfig.data.dictionaryUrl}?intAccount=${intAccount}&sessionId=${accountConfig.data.sessionId}`
     debug(`Making request to ${uri}`)
     fetch(uri, requestOptions)
       .then(res => res.json())

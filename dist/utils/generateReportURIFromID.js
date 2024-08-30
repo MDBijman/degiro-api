@@ -8,7 +8,7 @@ var BASE_REPORT_DOWNLOAD_URI = enums_1.DEGIRO_API_PATHS.BASE_REPORT_DOWNLOAD_URI
  * Generate a download URL to the report with the `id` identifier
  * @param id Report id to generate download URL
  */
-exports.generateReportURIFromID = function (reportId, accountData, accountConfig) {
-    return "" + accountConfig.data.paUrl + BASE_REPORT_DOWNLOAD_URI + reportId + "?sessionId=" + accountConfig.data.sessionId + "&intAccount=" + accountData.data.intAccount;
+exports.generateReportURIFromID = function (reportId, intAccount, accountConfig) {
+    return "" + accountConfig.data.paUrl + BASE_REPORT_DOWNLOAD_URI + reportId + "?sessionId=" + accountConfig.data.sessionId + "&intAccount=" + intAccount;
 };
 //# sourceMappingURL=generateReportURIFromID.js.map

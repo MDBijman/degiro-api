@@ -6,7 +6,7 @@ var utils_1 = require("../utils");
 // Importamos constantes
 var enums_1 = require("../enums");
 var GET_ACCOUNT_INFO_PATH = enums_1.DEGIRO_API_PATHS.GET_ACCOUNT_INFO_PATH;
-function getAccountInfoRequest(accountData, accountConfig) {
+function getAccountInfoRequest(intAccount, accountConfig) {
     return new Promise(function (resolve, reject) {
         var requestOptions = {
             headers: {
@@ -16,7 +16,7 @@ function getAccountInfoRequest(accountData, accountConfig) {
             referer: 'https://trader.degiro.nl/trader/',
         };
         // Do the request to get a account config data
-        var uri = "" + accountConfig.data.tradingUrl + GET_ACCOUNT_INFO_PATH + accountData.data.intAccount + ";jsessionid=" + accountConfig.data.sessionId;
+        var uri = "" + accountConfig.data.tradingUrl + GET_ACCOUNT_INFO_PATH + intAccount + ";jsessionid=" + accountConfig.data.sessionId;
         utils_1.debug("Making request to " + uri);
         utils_1.fetch(uri, requestOptions)
             .then(function (res) { return res.json(); })

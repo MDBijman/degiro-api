@@ -6,8 +6,6 @@ import { DeGiroClassInterface } from './interfaces'
 
 // Import types
 import {
-  DeGiroSettupType,
-  LoginResponseType,
   AccountConfigType,
   AccountDataType,
   CashFoundType,
@@ -16,7 +14,6 @@ import {
   SearchProductOptionsType,
   OrderType,
   CreateOrderResultType,
-  IsLoginOptionsType,
   GetOrdersConfigType,
   GetOrdersResultType,
   GetAccountStateOptionsType,
@@ -62,7 +59,46 @@ import {
   getPopularStocksRequest,
   getTransactionsRequest,
 } from './api'
-import { runInThisContext } from 'vm'
+
+export type DeGiroLoginType = {
+  username: string,
+  password: string,
+  oneTimePassword: string,
+}
+
+export class DeGiroLogin {
+  private readonly username: string;
+  private readonly password: string;
+  private readonly oneTimePassword: string;
+
+  constructor(params: DeGiroLoginType) {
+    this.username = params.username;
+    this.password = params.password;
+    this.oneTimePassword = params.oneTimePassword;
+  }
+
+  async login(intAccount: number): Promise<DeGiroSessionType> {
+    const loginResponse = await loginRequest({
+      username: this.username,
+      pwd: this.password,
+      oneTimePassword: this.oneTimePassword
+    });
+
+    if (!loginResponse.sessionId) {
+      throw "Undefined sessionId";
+    }
+
+    return {
+      jsessionId: loginResponse.sessionId,
+      intAccount: intAccount
+    }
+  }
+}
+
+export type DeGiroSessionType = {
+  jsessionId: string,
+  intAccount: number,
+}
 
 /**
  * @class DeGiro
@@ -72,121 +108,36 @@ export class DeGiro implements DeGiroClassInterface {
 
   /* Properties */
 
-  private readonly username: string | undefined
-  private readonly pwd: string | undefined
-  private readonly oneTimePassword: string | undefined
-  private jsessionId: string | undefined
+  // Session
+  private readonly intAccount: number;
+  private jsessionId: string;
+
   private accountConfig: AccountConfigType | undefined
-  private accountData: AccountDataType | undefined
 
   /* Constructor and generator function */
 
-  constructor(params: DeGiroSettupType = {}) {
-    let { username, pwd, oneTimePassword, jsessionId } = params
-
-    username = username || process.env['DEGIRO_USER']
-    pwd = pwd || process.env['DEGIRO_PWD']
-    oneTimePassword = oneTimePassword || process.env['DEGIRO_OTP']
-    jsessionId = jsessionId || process.env['DEGIRO_JSESSIONID']
-
-    if (!username && !jsessionId) throw new Error('DeGiro api needs an username to access')
-    if (!pwd && !jsessionId) throw new Error('DeGiro api needs an password to access')
-
-    this.username = username
-    this.pwd = pwd
-    this.oneTimePassword = oneTimePassword
-
-    this.jsessionId = jsessionId
+  constructor(params: DeGiroSessionType) {
+    this.jsessionId = params.jsessionId;
+    this.intAccount = params.intAccount;
   }
-
-  static create(params: DeGiroSettupType): DeGiro {
-    return new DeGiro(params)
-  }
-
-  /* Session methods */
-
-  login(): Promise<AccountDataType> {
-    if (this.jsessionId) return this.loginWithJSESSIONID(this.jsessionId)
-    return new Promise((resolve, reject) => {
-      loginRequest({
-        username: this.username as string,
-        pwd: this.pwd as string,
-        oneTimePassword: this.oneTimePassword,
-      })
-        .then((loginResponse: LoginResponseType) => {
-          if (!loginResponse.sessionId) reject('Login response have not a sessionId field')
-          else return this.getAccountConfig(loginResponse.sessionId)
-        })
-        .then(() => this.getAccountData())
-        .then(resolve)
-        .catch(reject)
-    })
-  }
-
-  logout(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (!this.accountData || !this.accountConfig) {
-        return reject('You must log in first')
-      }
-      logoutRequest(this.accountData, this.accountConfig)
-        .then(() => {
-          delete this.accountData
-          delete this.accountConfig
-          resolve()
-        })
-        .catch(reject)
-    })
-  }
-
-  isLogin(options?: IsLoginOptionsType): boolean | Promise<boolean> {
-    if (!options || !options.secure) return this.hasSessionId() && !!this.accountData
-    return new Promise((resolve) => {
-      this.getAccountConfig()
-        .then(() => resolve(true))
-        .catch(() => resolve(false))
-    })
-  }
-
-  private hasSessionId = (): boolean => !!this.accountConfig && !!this.accountConfig.data && !!this.accountConfig.data.sessionId
-
-  private loginWithJSESSIONID(jsessionId: string): Promise<AccountDataType> {
-    return new Promise((resolve, reject) => {
-      this.getAccountConfig(jsessionId)
-        .then(() => this.getAccountData())
-        .then((accountData) => {
-          this.jsessionId = undefined // Remove the jsessionId to prevent reuse
-          resolve(accountData)
-        })
-        .catch(reject)
-    })
-  }
-
-  getJSESSIONID = () => this.hasSessionId() ? (<AccountConfigType>this.accountConfig).data.sessionId : undefined
 
   /* Account methods */
 
-  getAccountConfig(sessionId?: string): Promise<AccountConfigType> {
+  getAccountConfig(): Promise<AccountConfigType> {
     return new Promise((resolve, reject) => {
-      if (!sessionId && !this.hasSessionId()) {
-        return reject('You must log in first or provide a JSESSIONID')
-      }
-      getAccountConfigRequest(sessionId || (<AccountConfigType>this.accountConfig).data.sessionId)
+      getAccountConfigRequest(this.jsessionId)
         .then((accountConfig: AccountConfigType) => {
-          this.accountConfig = accountConfig
+          this.accountConfig = accountConfig;
           resolve(accountConfig)
         })
         .catch(reject)
     })
   }
 
-  getAccountData(): Promise<AccountDataType> {
+  getAccountData(accountConfig: AccountConfigType): Promise<AccountDataType> {
     return new Promise((resolve, reject) => {
-      if (!this.hasSessionId()) {
-        return reject('You must log in first')
-      }
-      getAccountDataRequest(<AccountConfigType>this.accountConfig)
+      getAccountDataRequest(accountConfig)
         .then((accountData: AccountDataType) => {
-          this.accountData = accountData
           resolve(accountData)
         })
         .catch(reject)
@@ -194,52 +145,34 @@ export class DeGiro implements DeGiroClassInterface {
   }
 
   getAccountState(options: GetAccountStateOptionsType): Promise<any[]> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first')
-    }
-    return getAccountStateRequest(<AccountDataType>this.accountData, <AccountConfigType>this.accountConfig, options)
+    return getAccountStateRequest(this.intAccount, <AccountConfigType>this.accountConfig, options)
   }
 
   getAccountReports(): Promise<AccountReportsType> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first')
-    }
-    return getAccountReportsRequest(<AccountDataType>this.accountData, <AccountConfigType>this.accountConfig)
+    return getAccountReportsRequest(this.intAccount, <AccountConfigType>this.accountConfig)
   }
 
   getAccountInfo(): Promise<AccountInfoType> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first')
-    }
-    return getAccountInfoRequest(<AccountDataType>this.accountData, <AccountConfigType>this.accountConfig)
+    return getAccountInfoRequest(this.intAccount, <AccountConfigType>this.accountConfig)
   }
 
   /* Search methods */
 
   searchProduct(options: SearchProductOptionsType): Promise<SearchProductResultType[]> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first')
-    }
-    return searchProductRequest(options, <AccountDataType>this.accountData, <AccountConfigType>this.accountConfig)
+    return searchProductRequest(options, this.intAccount, <AccountConfigType>this.accountConfig)
   }
 
   /* Cash Funds methods */
 
   getCashFunds(): Promise<CashFoundType[]> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first')
-    }
-    return getCashFundstRequest(<AccountDataType>this.accountData, <AccountConfigType>this.accountConfig)
+    return getCashFundstRequest(this.intAccount, <AccountConfigType>this.accountConfig)
   }
 
   /* Porfolio methods */
 
   getPortfolio(config: GetPorfolioConfigType): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      if (!this.hasSessionId()) {
-        return reject('You must log in first')
-      }
-      getPortfolioRequest(<AccountDataType>this.accountData, <AccountConfigType>this.accountConfig, config)
+      getPortfolioRequest(this.intAccount, <AccountConfigType>this.accountConfig, config)
         .then(portfolio => this.completePortfolioDetails(portfolio, config.getProductDetails || false))
         .then(resolve)
         .catch(reject)
@@ -274,19 +207,13 @@ export class DeGiro implements DeGiroClassInterface {
   }
 
   getPopularStocks(config: GetPopularStocksConfigType = {}): Promise<StockType[]> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first')
-    }
-    return getPopularStocksRequest(<AccountDataType>this.accountData, <AccountConfigType>this.accountConfig, config)
+    return getPopularStocksRequest(this.intAccount, <AccountConfigType>this.accountConfig, config)
   }
 
   /* Orders methods */
 
   getOrders(config: GetOrdersConfigType): Promise<GetOrdersResultType> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first')
-    }
-    return getOrdersRequest(<AccountDataType>this.accountData, <AccountConfigType>this.accountConfig, config)
+    return getOrdersRequest(this.intAccount, <AccountConfigType>this.accountConfig, config)
   }
 
   getHistoricalOrders(options: GetHistoricalOrdersOptionsType): Promise<HistoricalOrdersType> {
@@ -296,75 +223,45 @@ export class DeGiro implements DeGiroClassInterface {
   }
 
   createOrder(order: OrderType): Promise<CreateOrderResultType> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first')
-    }
-    return createOrderRequest(order, <AccountDataType>this.accountData, <AccountConfigType>this.accountConfig)
+    return createOrderRequest(order, this.intAccount, <AccountConfigType>this.accountConfig)
   }
 
   executeOrder(order: OrderType, executeId: String): Promise<String> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first')
-    }
-    return executeOrderRequest(order, executeId, <AccountDataType>this.accountData, <AccountConfigType>this.accountConfig)
+    return executeOrderRequest(order, executeId, this.intAccount, <AccountConfigType>this.accountConfig)
   }
 
   deleteOrder(orderId: String): Promise<void> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first')
-    }
-    return deleteOrderRequest(orderId, <AccountDataType>this.accountData, <AccountConfigType>this.accountConfig)
+    return deleteOrderRequest(orderId, this.intAccount, <AccountConfigType>this.accountConfig)
   }
 
   getTransactions(options: GetTransactionsOptionsType): Promise<TransactionType[]> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first');
-    }
-    return getTransactionsRequest(<AccountDataType>this.accountData, <AccountConfigType>this.accountConfig, options);
+    return getTransactionsRequest(this.intAccount, <AccountConfigType>this.accountConfig, options);
   }
 
   /* Miscellaneous methods */
 
   getProductsByIds(ids: string[]): Promise<any[]> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first')
-    }
-    return getProductsByIdsRequest(ids, <AccountDataType>this.accountData, <AccountConfigType>this.accountConfig)
+    return getProductsByIdsRequest(ids, this.intAccount, <AccountConfigType>this.accountConfig)
   }
 
   getNews(options: GetNewsOptionsType): Promise<NewsType> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first')
-    }
-    return getNewsRequest(options, <AccountDataType>this.accountData, <AccountConfigType>this.accountConfig)
+    return getNewsRequest(options, this.intAccount, <AccountConfigType>this.accountConfig)
   }
 
   getWebi18nMessages(lang: string = 'es_ES'): Promise<i18nMessagesType> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first')
-    }
-    return getWebi18nMessagesRequest(lang, <AccountDataType>this.accountData, <AccountConfigType>this.accountConfig)
+    return getWebi18nMessagesRequest(lang, <AccountConfigType>this.accountConfig)
   }
 
   getWebSettings(): Promise<WebSettingsType> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first')
-    }
-    return getWebSettingsRequest(<AccountDataType>this.accountData, <AccountConfigType>this.accountConfig)
+    return getWebSettingsRequest(this.intAccount, <AccountConfigType>this.accountConfig)
   }
 
   getWebUserSettings(): Promise<WebUserSettingType> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first')
-    }
-    return getWebUserSettingsRequest(<AccountDataType>this.accountData, <AccountConfigType>this.accountConfig)
+    return getWebUserSettingsRequest(this.intAccount, <AccountConfigType>this.accountConfig)
   }
 
   getConfigDictionary(): Promise<ConfigDictionaryType> {
-    if (!this.hasSessionId()) {
-      return Promise.reject('You must log in first')
-    }
-    return getConfigDictionaryRequest(<AccountDataType>this.accountData, <AccountConfigType>this.accountConfig)
+    return getConfigDictionaryRequest(this.intAccount, <AccountConfigType>this.accountConfig)
   }
 
 }

@@ -9,6 +9,6 @@ const { BASE_REPORT_DOWNLOAD_URI } = DEGIRO_API_PATHS
  * Generate a download URL to the report with the `id` identifier
  * @param id Report id to generate download URL
  */
-export const generateReportURIFromID = (reportId: number | string, accountData: AccountDataType, accountConfig: AccountConfigType): string => {
-  return `${accountConfig.data.paUrl}${BASE_REPORT_DOWNLOAD_URI}${reportId}?sessionId=${accountConfig.data.sessionId}&intAccount=${accountData.data.intAccount}`
+export const generateReportURIFromID = (reportId: number | string, intAccount: number, accountConfig: AccountConfigType): string => {
+  return `${accountConfig.data.paUrl}${BASE_REPORT_DOWNLOAD_URI}${reportId}?sessionId=${accountConfig.data.sessionId}&intAccount=${intAccount}`
 }

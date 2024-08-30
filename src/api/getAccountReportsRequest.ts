@@ -11,7 +11,7 @@ import { generateReportURIFromID } from '../utils/generateReportURIFromID'
 import { DEGIRO_API_PATHS } from '../enums'
 const { GET_ACCOUNT_REPORTS_PATH } = DEGIRO_API_PATHS
 
-export function getAccountReportsRequest(accountData: AccountDataType, accountConfig: AccountConfigType): Promise<AccountReportsType> {
+export function getAccountReportsRequest(intAccount: number, accountConfig: AccountConfigType): Promise<AccountReportsType> {
   return new Promise((resolve, reject) => {
 
     const requestOptions: {
@@ -31,7 +31,7 @@ export function getAccountReportsRequest(accountData: AccountDataType, accountCo
     }
 
     // Do the request to get a account config data
-    const uri = `${accountConfig.data.paUrl}${GET_ACCOUNT_REPORTS_PATH}?intAccount=${accountData.data.intAccount}&sessionId=${accountConfig.data.sessionId}`
+    const uri = `${accountConfig.data.paUrl}${GET_ACCOUNT_REPORTS_PATH}?intAccount=${intAccount}&sessionId=${accountConfig.data.sessionId}`
     debug(`Making request to ${uri}`)
     fetch(uri, requestOptions)
       .then(res => res.json())
@@ -42,7 +42,7 @@ export function getAccountReportsRequest(accountData: AccountDataType, accountCo
         // Añadimos la URL de descarga del archivo para que sea más facil en cliente
         data = data.map(report => ({
           ...report,
-          uri: generateReportURIFromID(report.id, accountData, accountConfig),
+          uri: generateReportURIFromID(report.id, intAccount, accountConfig),
         }))
         resolve(data)
       })

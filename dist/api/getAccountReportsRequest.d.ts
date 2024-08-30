@@ -1,3 +1,3 @@
-import { AccountConfigType, AccountDataType, AccountReportsType } from '../types';
-export declare function getAccountReportsRequest(accountData: AccountDataType, accountConfig: AccountConfigType): Promise<AccountReportsType>;
+import { AccountConfigType, AccountReportsType } from '../types';
+export declare function getAccountReportsRequest(intAccount: number, accountConfig: AccountConfigType): Promise<AccountReportsType>;
 //# sourceMappingURL=getAccountReportsRequest.d.ts.map

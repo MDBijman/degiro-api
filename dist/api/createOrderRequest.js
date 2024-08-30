@@ -6,7 +6,7 @@ var enums_1 = require("../enums");
 var CREATE_ORDER_PATH = enums_1.DEGIRO_API_PATHS.CREATE_ORDER_PATH;
 // Import debug console log
 var utils_1 = require("../utils");
-function createOrderRequest(order, accountData, accountConfig) {
+function createOrderRequest(order, intAccount, accountConfig) {
     return new Promise(function (resolve, reject) {
         var requestOptions = {
             method: 'POST',
@@ -17,7 +17,7 @@ function createOrderRequest(order, accountData, accountConfig) {
             credentials: 'include',
             referer: 'https://trader.degiro.nl/trader/',
         };
-        var uri = "" + accountConfig.data.tradingUrl + CREATE_ORDER_PATH + ";jsessionid=" + accountConfig.data.sessionId + "?intAccount=" + accountData.data.intAccount + "&sessionId=" + accountConfig.data.sessionId;
+        var uri = "" + accountConfig.data.tradingUrl + CREATE_ORDER_PATH + ";jsessionid=" + accountConfig.data.sessionId + "?intAccount=" + intAccount + "&sessionId=" + accountConfig.data.sessionId;
         utils_1.debug(uri, requestOptions);
         utils_1.fetch(uri, requestOptions)
             .then(function (res) { return res.json(); })

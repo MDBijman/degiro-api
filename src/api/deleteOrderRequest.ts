@@ -4,7 +4,7 @@ import { AccountDataType, AccountConfigType } from '../types'
 // Import debug console log
 import { debug, fetch } from '../utils'
 
-export function deleteOrderRequest(orderId: String, accountData: AccountDataType, accountConfig: AccountConfigType): Promise<void> {
+export function deleteOrderRequest(orderId: String, intAccount: number, accountConfig: AccountConfigType): Promise<void> {
   return new Promise((resolve, reject) => {
 
     const requestOptions: {
@@ -26,7 +26,7 @@ export function deleteOrderRequest(orderId: String, accountData: AccountDataType
     }
 
     // tslint:disable-next-line: max-line-length
-    const uri = `https://trader.degiro.nl/trading/secure/v5/order/${orderId};jsessionid=${accountConfig.data.sessionId}?intAccount=${accountData.data.intAccount}&sessionId=${accountConfig.data.sessionId}`
+    const uri = `https://trader.degiro.nl/trading/secure/v5/order/${orderId};jsessionid=${accountConfig.data.sessionId}?intAccount=${intAccount}&sessionId=${accountConfig.data.sessionId}`
     debug(uri, requestOptions)
     fetch(uri, requestOptions)
       .then(res => res.json())

@@ -7,7 +7,6 @@ import {
   SearchProductResultType,
   OrderType,
   CreateOrderResultType,
-  IsLoginOptionsType,
   GetOrdersConfigType,
   GetOrdersResultType,
   GetAccountStateOptionsType,
@@ -33,19 +32,19 @@ export interface DeGiroClassInterface {
 
   /* Session methods */
 
-  login(): Promise<AccountDataType>
+  // login(): Promise<AccountDataType>
 
-  logout(): Promise<void>
+  // logout(): Promise<void>
 
-  isLogin(options?: IsLoginOptionsType): boolean | Promise<boolean>
+  // isLogin(options?: IsLoginOptionsType): boolean | Promise<boolean>
 
-  getJSESSIONID(): string | undefined
+  // getJSESSIONID(): string | undefined
 
   /* Account methods */
 
-  getAccountConfig(sessionId: string): Promise<AccountConfigType>
+  getAccountConfig(): Promise<AccountConfigType>
 
-  getAccountData(): Promise<AccountDataType>
+  getAccountData(config: AccountConfigType): Promise<AccountDataType>
 
   getAccountState(options: GetAccountStateOptionsType): Promise<any[]>
 

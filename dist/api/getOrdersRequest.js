@@ -6,7 +6,7 @@ var utils_1 = require("../utils");
 var DeGiroEnums_1 = require("../enums/DeGiroEnums");
 var utils_2 = require("../utils/");
 // tslint:disable-next-line: max-line-length
-function getOrdersRequest(accountData, accountConfig, config) {
+function getOrdersRequest(intAccount, accountConfig, config) {
     return new Promise(function (resolve, reject) {
         // Create params to get orders by types
         var active = config.active, lastTransactions = config.lastTransactions;
@@ -20,7 +20,7 @@ function getOrdersRequest(accountData, accountConfig, config) {
             referer: 'https://trader.degiro.nl/trader/',
         };
         // Do the request to get a account config data
-        var uri = accountConfig.data.tradingUrl + "v5/update/" + accountData.data.intAccount + ";jsessionid=" + accountConfig.data.sessionId + "?" + params;
+        var uri = accountConfig.data.tradingUrl + "v5/update/" + intAccount + ";jsessionid=" + accountConfig.data.sessionId + "?" + params;
         utils_1.debug("Making request to " + uri);
         utils_1.fetch(uri, requestOptions)
             .then(function (res) { return res.json(); })

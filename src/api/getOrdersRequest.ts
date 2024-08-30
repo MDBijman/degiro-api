@@ -7,7 +7,7 @@ import { GET_ORDERS_TYPES } from '../enums/DeGiroEnums'
 import { processGetOrdersResultListObject } from '../utils/'
 
 // tslint:disable-next-line: max-line-length
-export function getOrdersRequest(accountData: AccountDataType, accountConfig: AccountConfigType, config: GetOrdersConfigType): Promise<GetOrdersResultType> {
+export function getOrdersRequest(intAccount: number, accountConfig: AccountConfigType, config: GetOrdersConfigType): Promise<GetOrdersResultType> {
   return new Promise((resolve, reject) => {
     // Create params to get orders by types
     const { active, lastTransactions } = config
@@ -27,7 +27,7 @@ export function getOrdersRequest(accountData: AccountDataType, accountConfig: Ac
     }
 
     // Do the request to get a account config data
-    const uri = `${accountConfig.data.tradingUrl}v5/update/${accountData.data.intAccount};jsessionid=${accountConfig.data.sessionId}?${params}`
+    const uri = `${accountConfig.data.tradingUrl}v5/update/${intAccount};jsessionid=${accountConfig.data.sessionId}?${params}`
     debug(`Making request to ${uri}`)
     fetch(uri, requestOptions)
       .then(res => res.json())
