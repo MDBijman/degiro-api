@@ -20,7 +20,7 @@ function getAccountConfigRequest(sessionId) {
         utils_1.fetch(BASE_API_URL + GET_ACCOUNT_CONFIG_PATH, requestOptions)
             .then(function (res) {
             if (!res.ok) {
-                reject(res.json());
+                res.json().then(reject);
             }
             return res.json();
         })
