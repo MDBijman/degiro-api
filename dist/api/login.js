@@ -41,7 +41,7 @@ function loginRequest(params) {
             .then(function (res) { return res.json(); })
             .then(function (res) {
             if (!res.sessionId)
-                return reject(res.statusText);
+                return reject(res);
             utils_1.debug('Login response: ', JSON.stringify(res, null, 2));
             resolve(res);
         })

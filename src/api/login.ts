@@ -52,7 +52,7 @@ export function loginRequest(params: LoginRequestParamsType): Promise<LoginRespo
       })
       .then(res => res.json())
       .then((res) => {
-        if (!res.sessionId) return reject(res.statusText)
+        if (!res.sessionId) return reject(res)
         debug('Login response: ', JSON.stringify(res, null, 2))
         resolve(res)
       })
