@@ -39,7 +39,6 @@ export function getAccountReportsRequest(intAccount: number, accountConfig: Acco
         debug('Response:\n', JSON.stringify(res, null, 2))
         let data: AccountReportsType = res.data
 
-        // Añadimos la URL de descarga del archivo para que sea más facil en cliente
         data = data.map(report => ({
           ...report,
           uri: generateReportURIFromID(report.id, intAccount, accountConfig),

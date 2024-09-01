@@ -36,7 +36,6 @@ function getAccountReportsRequest(intAccount, accountConfig) {
             .then(function (res) {
             utils_1.debug('Response:\n', JSON.stringify(res, null, 2));
             var data = res.data;
-            // Añadimos la URL de descarga del archivo para que sea más facil en cliente
             data = data.map(function (report) { return (__assign(__assign({}, report), { uri: generateReportURIFromID_1.generateReportURIFromID(report.id, intAccount, accountConfig) })); });
             resolve(data);
         })

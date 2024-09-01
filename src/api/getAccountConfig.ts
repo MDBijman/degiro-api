@@ -31,7 +31,7 @@ export function getAccountConfigRequest(sessionId: string): Promise<AccountConfi
     debug(`Making request to ${BASE_API_URL}${GET_ACCOUNT_CONFIG_PATH} with JSESSIONID: ${sessionId}`)
     fetch(BASE_API_URL + GET_ACCOUNT_CONFIG_PATH, requestOptions)
       .then((res) => {
-        if (!res.ok) { reject(res.statusText) }
+        if (!res.ok) { reject(res.json()) }
         return res.json()
       })
       .then((res: AccountConfigType) => {
